@@ -1,7 +1,7 @@
 import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
-import { uglify } from 'rollup-plugin-uglify';
+import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 
 export default {
@@ -57,9 +57,9 @@ export default {
         typescript(),
 
         //  See https://www.npmjs.com/package/rollup-plugin-uglify for config options
-        uglify({
-            mangle: false
-        })
-
+        // uglify({
+        //     mangle: false
+        // })
+        terser()
     ]
 };
