@@ -54,7 +54,10 @@ export default {
         }),
 
         //  See https://www.npmjs.com/package/rollup-plugin-typescript2 for config options
-        typescript(),
+        typescript({
+            typescript: require('typescript'),
+            objectHashIgnoreUnknownHack: true,
+        }),
 
         //  See https://www.npmjs.com/package/rollup-plugin-uglify for config options
         // uglify({
