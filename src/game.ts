@@ -1,21 +1,26 @@
 import 'phaser';
+import { Vegetable } from './Vegetable';
 
-let player;
+let player: Vegetable;
 let cursors;
 
 function preload() {
-    this.load.image('onionSheet', 'assets/Onion.png');
-    this.load.spritesheet('onion',
-        'assets/Onion.png',
-        { frameWidth: 64, frameHeight: 64 }
-    );
+    const animMap = new Map();
+    animMap.set('onion', 'assets/Onion.png');
+    player = new Vegetable(64, 160, 200, animMap);
+    player.animations.forEach((value, key, map) => {
+        this.load.spritesheet(key, value,
+            { frameWidth: player.size, frameHeight: player.size }
+        );
+    });
 }
 
 function create() {
-    player = this.physics.add.sprite(400, 450, 'onion');
+    player.sprite = this.physics.add.sprite(400, 450, 'onion');
+    const playerSprite = player.sprite;
 
-    player.setBounce(0.2);
-    player.setCollideWorldBounds(true);
+    playerSprite.setBounce(0.2);
+    playerSprite.setCollideWorldBounds(true);
 
     this.anims.create({
         key: 'move',
@@ -34,18 +39,18 @@ function create() {
 
 function update() {
     if (cursors.left.isDown) {
-        // player.setVelocityX(-160);
-        player.flipX = true;
-        player.anims.play('move', true);
+        player.sprite.setVelocityX(-160);
+        player.sprite.flipX = true;
+        player.sprite.anims.play('move', true);
     }
     else if (cursors.right.isDown) {
-        // player.setVelocityX(160);
-        player.flipX = false;
-        player.anims.play('move', true);
+        player.sprite.setVelocityX(160);
+        player.sprite.flipX = false;
+        player.sprite.anims.play('move', true);
     }
     else {
-        player.setVelocityX(0);
-        player.anims.play('stop');
+        player.sprite.setVelocityX(0);
+        player.sprite.anims.play('stop');
     }
 }
 
