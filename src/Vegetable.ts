@@ -3,10 +3,15 @@ import { Entity } from "./Entity";
 export class Vegetable extends Entity {
     maxSpeed: number;
     acceleration: number;
+    cursors: any;
     constructor(size: number, maxSpeed: number, acceleration: number, animMap: Map<string, string>) {
         super(size, animMap);
         this.maxSpeed = maxSpeed;
         this.acceleration = acceleration;
+    }
+
+    setCursors(cursors){
+        this.cursors = cursors;
     }
 
     updateAnim(){
