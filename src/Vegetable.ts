@@ -14,6 +14,11 @@ export class Vegetable extends Entity {
         this.cursors = cursors;
     }
 
+    update(){
+        this.move();
+        this.updateAnim();
+    }
+
     updateAnim(){
         if(this.sprite.body.speed > 0.001){
             this.sprite.anims.play(this.animations.get('move'), true);

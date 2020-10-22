@@ -63,10 +63,8 @@ function create() {
 }
 
 function update() {
-    player.move();
-    player.updateAnim();
-    enemy.move();
-    // enemy.updateAnim();
+    player.update();
+    enemy.update();
 }
 
 const config = {

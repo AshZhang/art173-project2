@@ -8,4 +8,8 @@ export class Enemy extends Vegetable {
         this.sprite.setVelocityX(Math.random() * 2 * this.maxSpeed - this.maxSpeed);
         this.sprite.setVelocityY(Math.random() * 2 * this.maxSpeed - this.maxSpeed);
     }
+    update(){
+        this.move();
+        super.updateAnim();
+    }
 }
