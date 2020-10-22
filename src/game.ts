@@ -2,56 +2,46 @@ import 'phaser';
 import { Vegetable } from './Vegetable';
 
 let player: Vegetable;
+
 let cursors;
 
 function preload() {
+    this.load.spritesheet('onion', 'assets/Onion.png',
+        { frameWidth: 64, frameHeight: 64 }
+    );
+}
+
+function setupPlayer(sprite){
     const animMap = new Map();
-    animMap.set('onion', 'assets/Onion.png');
+    animMap.set('move', 'onion_move');
+    animMap.set('stop', 'onion_stop');
     player = new Vegetable(64, 160, 200, animMap);
-    player.animations.forEach((value, key, map) => {
-        this.load.spritesheet(key, value,
-            { frameWidth: player.size, frameHeight: player.size }
-        );
-    });
+    player.setCursors(cursors);
+    player.sprite = sprite;
+    player.sprite.setBounce(0.2);
+    player.sprite.setCollideWorldBounds(true);
 }
 
 function create() {
-    player.sprite = this.physics.add.sprite(400, 450, 'onion');
-    const playerSprite = player.sprite;
-
-    playerSprite.setBounce(0.2);
-    playerSprite.setCollideWorldBounds(true);
-
+    cursors = this.input.keyboard.createCursorKeys();
     this.anims.create({
-        key: 'move',
+        key: 'onion_move',
         frames: this.anims.generateFrameNumbers('onion', { start: 0, end: 5 }),
         frameRate: 10,
         repeat: -1
     });
 
     this.anims.create({
-        key: 'stop',
+        key: 'onion_stop',
         frames: [{ key: 'onion', frame: 3 }],
         frameRate: 20
     });
-    cursors = this.input.keyboard.createCursorKeys();
+    setupPlayer(this.physics.add.sprite(400, 450, 'onion'));
 }
 
 function update() {
-    if (cursors.left.isDown) {
-        player.sprite.setVelocityX(-160);
-        player.sprite.flipX = true;
-        player.sprite.anims.play('move', true);
-    }
-    else if (cursors.right.isDown) {
-        player.sprite.setVelocityX(160);
-        player.sprite.flipX = false;
-        player.sprite.anims.play('move', true);
-    }
-    else {
-        player.sprite.setVelocityX(0);
-        player.sprite.anims.play('stop');
-    }
+    player.move();
+    player.updateAnim();
 }
 
 const config = {
