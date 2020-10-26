@@ -1,9 +1,11 @@
 import { Entity } from "./Entity";
 
-export class Vegetable extends Entity {
+export abstract class Vegetable extends Entity {
     maxSpeed: number;
     acceleration: number;
     cursors: any;
+    layers: number;
+    attack: number;
     constructor(size: number, maxSpeed: number, acceleration: number, animMap: Map<string, string>) {
         super(size, animMap);
         this.maxSpeed = maxSpeed;
@@ -14,7 +16,21 @@ export class Vegetable extends Entity {
         this.cursors = cursors;
     }
 
+    abstract move(): void;
+
+    abstract spawnAttack(): void;
+
+    receiveDamage(atkPower: number){
+        this.layers -= atkPower;
+        if(this.layers <= 0){
+            this.gotoSoup();
+        }
+    }
+
+    abstract gotoSoup(): void;
+
     update(){
+        console.log(this);
         this.move();
         this.updateAnim();
     }
@@ -24,29 +40,6 @@ export class Vegetable extends Entity {
             this.sprite.anims.play(this.animations.get('move'), true);
         }else{
             this.sprite.anims.play(this.animations.get('stop'));
-        }
-    }
-
-    move(){
-        if (this.cursors.left.isDown) {
-            this.sprite.setVelocityX(-160);
-            this.sprite.flipX = true;
-        }
-        else if (this.cursors.right.isDown) {
-            this.sprite.setVelocityX(160);
-            this.sprite.flipX = false;
-        }
-        else {
-            this.sprite.setVelocityX(0);
-        }
-        if (this.cursors.up.isDown) {
-            this.sprite.setVelocityY(-160);
-        }
-        else if (this.cursors.down.isDown) {
-            this.sprite.setVelocityY(160);
-        }
-        else {
-            this.sprite.setVelocityY(0);
         }
     }
 }

@@ -1,8 +1,9 @@
 import 'phaser';
 import { Vegetable } from './Vegetable';
 import { Enemy } from './Enemy';
+import { Player } from './Player';
 
-let player: Vegetable;
+let player: Player;
 let enemy: Enemy;
 let cursors;
 
@@ -18,7 +19,7 @@ function setupPlayer(sprite) {
     const animMap = new Map();
     animMap.set('move', 'onion_move');
     animMap.set('stop', 'onion_stop');
-    player = new Vegetable(64, 160, 200, animMap);
+    player = new Player(64, 160, 200, animMap);
     player.setCursors(cursors);
     player.sprite = sprite;
     player.sprite.setBounce(0.2);

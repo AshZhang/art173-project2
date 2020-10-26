@@ -12,4 +12,10 @@ export class Enemy extends Vegetable {
         this.move();
         super.updateAnim();
     }
+    spawnAttack(){
+
+    }
+    gotoSoup(){
+        
+    }
 }
