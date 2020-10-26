@@ -2,18 +2,7 @@ import 'phaser';
 import { Vegetable } from './Vegetable';
 import { Enemy } from './Enemy';
 import { Player } from './Player';
-
-const PLAYER_SPEED = 160;
-const PLAYER_ACCEL = 200;
-const PLAYER_ATK_POWER = 1;
-const MAX_PLAYER_HEALTH = 5;
-
-const ENEMY_SPEED = 160;
-const ENEMY_ACCEL = 200;
-const ENEMY_ATK_POWER = 1;
-const MAX_ENEMY_HEALTH = 3;
-
-const VEG_SIZE = 64;
+import * as CONST from './Consts';
 
 let player: Player;
 let enemy: Enemy;
@@ -28,6 +17,7 @@ function preload() {
     );
     this.load.spritesheet('enemy', 'assets/Enemy.png',
         { frameWidth: 64, frameHeight: 64 });
+    this.load.image('bg', 'assets/bg.jpg');
 }
 
 function setupPlayer(sprite) {
@@ -36,7 +26,7 @@ function setupPlayer(sprite) {
     animMap.set('stop', 'onion_stop');
     animMap.set('atk', 'onion_atk');
     animMap.set('hurt', 'onion_hurt');
-    player = new Player(MAX_PLAYER_HEALTH, PLAYER_ATK_POWER, PLAYER_SPEED, PLAYER_ACCEL, animMap);
+    player = new Player(CONST.MAX_PLAYER_HEALTH, CONST.PLAYER_ATK_POWER, CONST.PLAYER_SPEED, CONST.PLAYER_ACCEL, animMap);
     player.setCursors(cursors);
     player.sprite = sprite;
     player.sprite.setBounce(0.2);
@@ -49,7 +39,7 @@ function setupEnemy(sprite) {
     animMap.set('move', 'enemy_move');
     animMap.set('stop', 'enemy_stop');
     animMap.set('hurt', 'onion_hurt');
-    enemy = new Enemy(MAX_ENEMY_HEALTH, ENEMY_ATK_POWER, ENEMY_SPEED, ENEMY_ACCEL, animMap);
+    enemy = new Enemy(CONST.MAX_ENEMY_HEALTH, CONST.ENEMY_ATK_POWER, CONST.ENEMY_SPEED, CONST.ENEMY_ACCEL, animMap);
     enemy.sprite = sprite;
     enemy.sprite.setBounce(0.2);
     enemy.sprite.setCollideWorldBounds(true);
@@ -88,6 +78,7 @@ function create() {
         frames: [{ key: 'enemy', frame: 3 }],
         frameRate: 20
     });
+    this.add.image(400, 300, 'bg');
     setupEnemy(this.physics.add.sprite(300, 450, 'enemy'));
     setupPlayer(this.physics.add.sprite(400, 450, 'onion'));
     this.physics.add.overlap(player.sprite, enemy.sprite, (p_sprite, e_sprite) => {
@@ -103,8 +94,8 @@ function update() {
 
 const config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: CONST.CANVAS_WIDTH,
+    height: CONST.CANVAS_HEIGHT,
     scene: {
         preload: preload,
         create: create,

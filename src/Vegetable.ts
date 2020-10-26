@@ -24,7 +24,9 @@ export abstract class Vegetable extends Entity {
 
     abstract move(): void;
 
-    abstract attack(): void;
+    attack(): void{
+        this.isAtking = true;
+    }
 
     endAttack(animation) {
         if (animation.key === this.animations.get('atk')) {
@@ -34,7 +36,6 @@ export abstract class Vegetable extends Entity {
     }
 
     receiveDamage(atkPower: number) {
-        console.log(`I got called and ${this.canBeHurt}`);
         if (this.canBeHurt) {
             this.canBeHurt = false;
             this.layers -= atkPower;
@@ -49,15 +50,17 @@ export abstract class Vegetable extends Entity {
         }
     }
 
-    abstract gotoSoup(): void;
-
-    update() {
-        this.move();
-        if (this.cursors.space.isDown && !this.isAtking) {
-            this.attack();
-        }
+    reset(): void{
+        this.sprite.setVelocity(0);
+        this.sprite.setAcceleration(0);
+        this.isAtking = false;
+        this.canBeHurt = true;
         this.updateAnim();
     }
+
+    abstract gotoSoup(): void;
+
+    abstract update(): void;
 
     updateAnim() {
         if (!this.canBeHurt) {

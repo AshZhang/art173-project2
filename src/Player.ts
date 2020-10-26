@@ -1,4 +1,5 @@
 import { Vegetable } from "./Vegetable";
+import * as CONST from "./Consts";
 
 export class Player extends Vegetable {
     constructor(health: number, atkPower: number, maxSpeed: number, acceleration: number, animMap: Map<string, string>) {
@@ -27,15 +28,21 @@ export class Player extends Vegetable {
         }
     }
 
-    attack(): void{
-        this.isAtking = true;
+    reset(): void{
+        this.sprite.setPosition(CONST.CANVAS_WIDTH * 3 / 4, CONST.CANVAS_HEIGHT/2);
+        this.layers = CONST.MAX_PLAYER_HEALTH;
+        super.reset();
+    }
+
+    update() {
+        this.move();
+        if (this.cursors.space.isDown && !this.isAtking) {
+            this.attack();
+        }
+        this.updateAnim();
     }
 
     gotoSoup(){
-
+        this.reset();
     }
-    // update(){
-    //     this.move();
-    //     super.updateAnim();
-    // }
 }
