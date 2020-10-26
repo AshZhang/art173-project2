@@ -1,8 +1,8 @@
 import { Vegetable } from "./Vegetable";
 
 export class Enemy extends Vegetable {
-    constructor(size: number, maxSpeed: number, acceleration: number, animMap: Map<string, string>) {
-        super(size, maxSpeed, acceleration, animMap);
+    constructor(health: number, atkPower: number, maxSpeed: number, acceleration: number, animMap: Map<string, string>) {
+        super(health, atkPower, maxSpeed, acceleration, animMap);
     }
     move(){
         this.sprite.setVelocityX(Math.random() * 2 * this.maxSpeed - this.maxSpeed);
@@ -12,7 +12,7 @@ export class Enemy extends Vegetable {
         this.move();
         super.updateAnim();
     }
-    spawnAttack(){
+    attack(){
 
     }
     gotoSoup(){

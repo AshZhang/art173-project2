@@ -1,10 +1,10 @@
 import { Vegetable } from "./Vegetable";
 
 export class Player extends Vegetable {
-    constructor(size: number, maxSpeed: number, acceleration: number, animMap: Map<string, string>) {
-        super(size, maxSpeed, acceleration, animMap);
+    constructor(health: number, atkPower: number, maxSpeed: number, acceleration: number, animMap: Map<string, string>) {
+        super(health, atkPower, maxSpeed, acceleration, animMap);
     }
-    move(){
+    move(): void{
         if (this.cursors.left.isDown) {
             this.sprite.setVelocityX(-160);
             this.sprite.flipX = true;
@@ -27,11 +27,12 @@ export class Player extends Vegetable {
         }
     }
 
-    spawnAttack(){
-
+    attack(): void{
+        this.isAtking = true;
     }
+
     gotoSoup(){
-        
+
     }
     // update(){
     //     this.move();

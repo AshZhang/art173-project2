@@ -5,40 +5,68 @@ export abstract class Vegetable extends Entity {
     acceleration: number;
     cursors: any;
     layers: number;
-    attack: number;
-    constructor(size: number, maxSpeed: number, acceleration: number, animMap: Map<string, string>) {
-        super(size, animMap);
+    atkPower: number;
+    isAtking: boolean;
+    canBeHurt: boolean;
+    constructor(health: number, atkPower: number, maxSpeed: number, acceleration: number, animMap: Map<string, string>) {
+        super(animMap);
         this.maxSpeed = maxSpeed;
         this.acceleration = acceleration;
+        this.atkPower = atkPower;
+        this.isAtking = false;
+        this.canBeHurt = true;
+        this.layers = health;
     }
 
-    setCursors(cursors){
+    setCursors(cursors) {
         this.cursors = cursors;
     }
 
     abstract move(): void;
 
-    abstract spawnAttack(): void;
+    abstract attack(): void;
 
-    receiveDamage(atkPower: number){
-        this.layers -= atkPower;
-        if(this.layers <= 0){
-            this.gotoSoup();
+    endAttack(animation) {
+        if (animation.key === this.animations.get('atk')) {
+            this.isAtking = false;
+            this.updateAnim();
+        }
+    }
+
+    receiveDamage(atkPower: number) {
+        console.log(`I got called and ${this.canBeHurt}`);
+        if (this.canBeHurt) {
+            this.canBeHurt = false;
+            this.layers -= atkPower;
+            if (this.layers <= 0) {
+                this.gotoSoup();
+            } else {
+                setTimeout(() => {
+                    this.canBeHurt = true;
+                    this.updateAnim();
+                }, 1000);
+            }
         }
     }
 
     abstract gotoSoup(): void;
 
-    update(){
-        console.log(this);
+    update() {
         this.move();
+        if (this.cursors.space.isDown && !this.isAtking) {
+            this.attack();
+        }
         this.updateAnim();
     }
 
-    updateAnim(){
-        if(this.sprite.body.speed > 0.001){
+    updateAnim() {
+        if (!this.canBeHurt) {
+            this.sprite.anims.play(this.animations.get('hurt'));
+        } else if (this.isAtking) {
+            this.sprite.anims.play(this.animations.get('atk'), true);
+        } else if (this.sprite.body.speed > 0.001) {
             this.sprite.anims.play(this.animations.get('move'), true);
-        }else{
+        } else {
             this.sprite.anims.play(this.animations.get('stop'));
         }
     }

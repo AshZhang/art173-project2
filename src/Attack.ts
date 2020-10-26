@@ -1,7 +1,13 @@
 import { Entity } from "./Entity";
+import { Vegetable } from "./Vegetable";
 
 export class Attack extends Entity{
-    constructor(size, animMap: Map<string, string>){
-        super(size, animMap);
+    atkPower: number;
+    constructor(animMap: Map<string, string>){
+        super(animMap);
+    }
+
+    causeDamage(otherVeg: Vegetable){
+        otherVeg.receiveDamage(this.atkPower);
     }
 }
