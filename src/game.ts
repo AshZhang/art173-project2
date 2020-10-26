@@ -17,6 +17,9 @@ function preload() {
     );
     this.load.spritesheet('enemy', 'assets/Enemy.png',
         { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('enemy_atk', 'assets/Enemy_atk.png',
+        { frameWidth: 128, frameHeight: 128 }
+    );
     this.load.image('bg', 'assets/bg.jpg');
 }
 
@@ -32,17 +35,21 @@ function setupPlayer(sprite) {
     player.sprite.setBounce(0.2);
     player.sprite.setCollideWorldBounds(true);
     player.sprite.on('animationcomplete', (a, f) => player.endAttack(a), player.sprite);
+    player.sprite.body.setSize(110, 110);
 }
 
 function setupEnemy(sprite) {
     const animMap = new Map();
     animMap.set('move', 'enemy_move');
     animMap.set('stop', 'enemy_stop');
-    animMap.set('hurt', 'onion_hurt');
+    animMap.set('atk', 'enemy_atk');
+    animMap.set('hurt', 'enemy_hurt');
     enemy = new Enemy(CONST.MAX_ENEMY_HEALTH, CONST.ENEMY_ATK_POWER, CONST.ENEMY_SPEED, CONST.ENEMY_ACCEL, animMap);
     enemy.sprite = sprite;
     enemy.sprite.setBounce(0.2);
     enemy.sprite.setCollideWorldBounds(true);
+    enemy.sprite.on('animationcomplete', (a, f) => enemy.endAttack(a), enemy.sprite);
+    enemy.sprite.body.setSize(110, 110);
 }
 function create() {
     cursors = this.input.keyboard.createCursorKeys();
@@ -74,16 +81,28 @@ function create() {
         repeat: -1
     });
     this.anims.create({
+        key: 'enemy_atk',
+        frames: this.anims.generateFrameNumbers('enemy_atk', { start: 0, end: 2 }),
+        frameRate: 10
+    });
+    this.anims.create({
         key: 'enemy_stop',
         frames: [{ key: 'enemy', frame: 3 }],
         frameRate: 20
     });
+    this.anims.create({
+        key: 'enemy_hurt',
+        frames: [{ key: 'enemy', frame: 6 }],
+        frameRate: 20
+    });
     this.add.image(400, 300, 'bg');
-    setupEnemy(this.physics.add.sprite(300, 450, 'enemy'));
-    setupPlayer(this.physics.add.sprite(400, 450, 'onion'));
+    setupEnemy(this.physics.add.sprite(CONST.CANVAS_WIDTH / 4, CONST.CANVAS_HEIGHT / 2, 'enemy'));
+    setupPlayer(this.physics.add.sprite(CONST.CANVAS_WIDTH * 3 / 4, CONST.CANVAS_HEIGHT/2, 'onion'));
     this.physics.add.overlap(player.sprite, enemy.sprite, (p_sprite, e_sprite) => {
         if (player.isAtking) {
             enemy.receiveDamage(player.atkPower);
+        } else if (enemy.isAtking) {
+            player.receiveDamage(enemy.atkPower);
         }
     }, null, this);
 }
